@@ -20,7 +20,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-nodes = search(:node, "keys_ssh:* NOT name:#{node.name}")
+nodes = []
+if Chef::Config[:solo]
+  Chef::Log.warn("This recipe uses search. Chef Solo does not support search.")
+else
+  nodes = search(:node, "keys_ssh:* NOT name:#{node.name}")
+end
 nodes << node
 
 begin
